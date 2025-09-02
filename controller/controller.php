@@ -6,19 +6,29 @@ function home(){
     include("./views/home/inicio.php");
 }
 
-function exibirBusca(){
-    include("./views/produtos/produtos.php");
-    readProdutos($_POST["categoria"]);
+function criarProd(){
+    criarProdutos($_POST["nomeProduto"], $_POST["descProduto"], $_POST["precoProduto"], $_POST["categoria"]);
+    header("Location: ./views/produtos/produtos.php");
 }
 
-function criarProd(){
-    criarProdutos($_POST["nomeProduto"], $_POST["categoria"], $_POST["precoProduto"]);
-    include("./views/home/inicio.php");
+function deleteProd(){
+    deleteProduto($_POST["produto"]);
+    header("Location: ./views/produtos/produtos.php");
+}
+
+function editProd(){
+    editarProduto($_POST["nomeProduto"], $_POST["descProduto"], $_POST["precoProduto"], $_POST["produto"]);
+    header("Location: ./views/produtos/produtos.php");
 }
 
 function criarCat(){
     criarCategoria($_POST["nomeCategoria"]);
-    include("./views/home/inicio.php");
+    header("Location: ./views/produtos/produtos.php");
+}
+
+function deleteCat(){
+    deleteCategoria($_POST["categoria"]);
+    header("Location: ./views/produtos/produtos.php");
 }
 
 function login(){

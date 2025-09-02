@@ -17,28 +17,31 @@ switch($acao){
         cadastro();
         break;
     }
-    case "inicio": {
-        home();
-        break;
-    }
-    case "buscar": {
-        exibirBusca();
-        break;
-    }
-    case "criar": {
-        criarProd();
-        break;
-    }
-
-    case "criarCategoria": {
-        criarCat();
-        break;
-    }
-
     case "concluir": {
         concluirCadastroUser();
         break;
     }
+    case "inicio": {
+        home();
+        break;
+    }
+    case "criarCategoria": {
+        criarCat();
+        break;
+    }
+    case "deleteCategoria": {
+        deleteCat();
+        break;
+    }
+    case "deleteProduto": {
+        deleteProd();
+        break;
+    }
+    case "editProduto": {
+        editProd();
+        break;
+    }
+
 }
 
 ?>
