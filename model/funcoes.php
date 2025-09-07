@@ -20,6 +20,30 @@ function conectarBanco() {
     return $conexao;
 }
 
+function getUser($user){
+    $sql = "SELECT * FROM tb_usuarios WHERE TB_USUARIOS_USERNAME = ?";
+    $conexao = conectarBanco();
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("s", $user);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $result = $result->fetch_assoc();
+    return $result;
+}
+
+function getUsers(){
+    $sql = "SELECT * FROM tb_usuarios";       
+    $conexao = conectarBanco();   
+    $result = $conexao->query($sql);
+    $users = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $users[] = $row;
+    }
+    $conexao->close();
+
+    return $users;
+}
 
 function loginUser($name, $senha){
     $sql = "SELECT * FROM tb_usuarios WHERE TB_USUARIOS_USERNAME = ? AND TB_USUARIOS_PASSWORD = ?";
@@ -75,7 +99,7 @@ function concluirCadastro($nome, $tel, $endereco, $numEndereco, $user){
     $result = $result->fetch_assoc();
     $id = $result["TB_USUARIOS_ID"];
 
-    $sql = "INSERT INTO tb_cliente (TB_CLIENTE_NOME, TB_CLIENTE_TEL, TB_CLIENTE_ENDERECO, TB_CLIENTE_ENDERECO_NUM, TB_CLIENTE_FK) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO tb_cliente (TB_CLIENTE_NOME, TB_CLIENTE_TEL, TB_CLIENTE_ENDERECO, TB_CLIENTE_ENDERECO_NUM, TB_USER_FK) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("ssssi", $nome, $tel, $endereco, $numEndereco, $id);
     $stmt->execute();
@@ -178,6 +202,38 @@ function editarCategoria($nome, $id){
     $stmt->execute();
     $stmt->close();
     $conexao->close();
+}
+
+// usuarios 
+
+function deleteUser($users){
+    $sql = "DELETE FROM tb_usuarios WHERE TB_USUARIOS_ID = ?";
+    $conexao = conectarBanco();
+    $stmt = $conexao->prepare($sql);
+
+    foreach ($users as $id) {
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+
+    $stmt->close();
+    $conexao->close();
+}
+
+//pedidos
+
+function getPedidos(){
+    $sql = "SELECT * FROM tb_pedido INNER JOIN tb_pedido_venda";       
+    $conexao = conectarBanco();   
+    $result = $conexao->query($sql);
+    $pedidos = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $pedidos[] = $row;
+    }
+    $conexao->close();
+
+    return $pedidos;
 }
 
 

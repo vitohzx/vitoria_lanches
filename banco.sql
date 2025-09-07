@@ -73,7 +73,7 @@ insert into tb_usuarios
 ) VALUES (
 	'root',
     'root',
-    'cliente'
+    'administrador'
 );
 
 select * from tb_usuarios;

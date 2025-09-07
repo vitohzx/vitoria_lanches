@@ -21,7 +21,7 @@
             </div>
             <div class="linha">
                 <img src="../../images/lock.png" alt="" style="width: 35px; height: 35px; margin-left: 5%">
-                <input type="text" name="senha" id="" placeholder="SENHA" required class="textInput">
+                <input type="password" name="senha" id="" placeholder="SENHA" required class="textInput">
             </div>
             
             <input type="submit" value="ENTRAR" class="cadButton">

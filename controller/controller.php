@@ -3,7 +3,7 @@
 require("model/funcoes.php");
 
 function home(){
-    include("./views/home/inicio.php");
+    header("Location: ./views/home/inicio.php");
 }
 
 function criarProd(){
@@ -31,17 +31,18 @@ function deleteCat(){
     header("Location: ./views/produtos/produtos.php");
 }
 
-function login(){
-    header("Location: ./views/login/login.php");
+function editCat(){
+    editarCategoria($_POST["nomeCategoria"], $_POST["categoria"]);
+    header("Location: ./views/produtos/produtos.php");
 }
+
 
 function logarUsuario(){
     $user = loginUser($_POST["user"], $_POST["senha"]);
     if ($user){
-        header("Location: ./views/home/inicio.php");
+        header("Location: ./views/home/inicio.php?user={$_POST['user']}");
     } else {
-        header("Location: ./views/login/login.php");
-        echo "<script>alert('Usuario ou senha incorretos');</script>";
+        echo "<script>alert('Usuario ou senhas incorretos'); window.location.href='./views/login/login.php'</script>";;
     }
 }
 
@@ -51,7 +52,12 @@ function cadastro(){
 
 function concluirCadastroUser(){
     concluirCadastro($_POST["nome"], $_POST["tel"], $_POST["endereco"], $_POST["numEndereco"], $_GET["user"]);
-    header("Location: ./views/home/inicio.php");
+    header("Location: ./views/home/inicio.php?user={$_GET['user']}");
+}
+
+function deletarUser(){
+    deleteUser($_POST["usuarios"]);
+    header("Location: ./views/usuarios/usuarios.php");
 }
 
 ?>
