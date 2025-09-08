@@ -11,10 +11,16 @@
 <body>
     <div class="container">
         <div class="menu">
-            <a href="inicio.php">Home</a><br>
-            <a href="#">Produtos</a><br>
             <?php
-        
+
+            echo "<div class='aba'>
+                    <div class='icon'> <img src='../../images/home.png' height='100%' width='100%'> </div> <a href='inicio.php?user={$_GET['user']}'>Home</a>
+                </div>
+                <div class='aba'>
+                    <div class='icon'> <img src='../../images/prod.png' height='100%' width='100%'> </div> <a href='#'>Produtos</a>
+                </div>";
+
+
             require_once(__DIR__. "/../../model/funcoes.php");
         
             $user = isset($_GET["user"]) ? $user = getUser($_GET["user"]) : null;
@@ -22,11 +28,17 @@
             if($user) $tipo = $user["TB_USUARIOS_TIPO"];
             if ($tipo == "administrador") {
                 echo "
-                    <div>
-                        <a href='../produtos/produtos.php?user={$_GET['user']}' class='adm'>Gerenciar Produtos</a><br><br>
-                        <a href='../usuarios/usuarios.php?user={$_GET['user']}' class='adm'>Gerenciar Usuarios</a><br><br>
-                        <a href='../pedidos/pedidos.php?user={$_GET['user']}' class='adm'>Gerenciar Pedidos</a><br><br>
-                        <a href='#' class='adm'>Gerar Relatorios</a><br><br>
+                    <div class='aba'>
+                        <div class='icon'> </div> <a href='../produtos/produtos.php?user={$_GET['user']}' class='adm'>Gerenciar Produtos</a>
+                    </div>
+                    <div class='aba'>
+                        <div class='icon'> </div> <a href='../usuarios/usuarios.php?user={$_GET['user']}' class='adm'>Gerenciar Usuarios</a>
+                    </div>
+                    <div class='aba'>       
+                        <div class='icon'> </div> <a href='../pedidos/pedidos.php?user={$_GET['user']}' class='adm'>Gerenciar Pedidos</a>
+                    </div>
+                    <div class='aba'>
+                        <div class='icon'> </div> <a href='#' class='adm'>Gerar Relatorios</a>
                     </div>
                 ";
             }
