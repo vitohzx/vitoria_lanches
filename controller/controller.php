@@ -60,4 +60,9 @@ function deletarUser(){
     header("Location: ./views/usuarios/usuarios.php");
 }
 
+function adicionarProdutoPedido(){
+    addProdutoPedido($_POST["produto"], $_POST["quantidade"], $_POST["usuario"]);
+    header("Location: ./views/fazer_pedido/fazer_pedido.php?user={$_POST['user']}");
+}
+
 ?>

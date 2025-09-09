@@ -236,5 +236,19 @@ function getPedidos(){
     return $pedidos;
 }
 
+// function addProdutoPedido($produto, $quantidade, $user){
+//     if ($produto == "nulo") {
+//         return;
+//     }
+
+//     $sql = "INSERT INTO tb_pedido_venda (TB_CLIENTE_ID, TB_PEDIDO_VENDA_DATA, TB_PEDIDO_VENDA_VAL_TOTAL, TB_PEDIDO_VENDA_STATUS, TB_PEDIDO_VENDA_FORMA_PAG, TB_PEDIDO_VENDA_OBS) VALUES (?, '01/01/2001', ?, 'PREPARANDO', 'DINHEIRO', 'SEM OBS')";
+//     $conexao = conectarBanco();
+//     $stmt = $conexao->prepare($sql);
+//     $stmt->bind_param("ii", $, $qauntidade);
+//     $stmt->execute();
+//     $stmt->close();
+//     $conexao->close();
+// }
+
 
 ?>

@@ -64,6 +64,13 @@ switch($acao){
         break;
     }
 
+    //pedidos
+
+    // case "adicionar" {
+    //     adicionarProdutoPedido();
+    //     break;
+    // }
+
 }
 
 ?>
