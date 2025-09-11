@@ -13,46 +13,76 @@
         <div class="menu">
             <?php
 
+            session_start();
+
             require_once(__DIR__. "/../../model/funcoes.php");
         
-            $user = isset($_GET["user"]) ? $user = getUser($_GET["user"]) : null;
             $tipo = "visitante";
             $username = "visitante";
 
-            if($user) {
-                $tipo = $user["TB_USUARIOS_TIPO"];
-                $username = $user["TB_USUARIOS_USERNAME"];
+            if(isset($_POST["user"])) {
+                $usuario = getUser($_POST["user"]);
+                $tipo = $usuario["TB_USUARIOS_TIPO"];
+                $username = $usuario["TB_USUARIOS_USERNAME"];
             }
             
 
                 echo "<div class='aba'>
-                         <div class='icon'> <img src='../../images/home.png' height='100%' width='100%'> </div> <a href='inicio.php?user=$username'>Home</a>
+                        <div class='icon'> <img src='../../images/home.png' height='100%' width='100%'> </div>
+                        <form action='inicio.php' method='post'> 
+                            <input type='submit' value='Home' class='links'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>
                     <div class='aba'>
-                        <div class='icon'> <img src='../../images/prod.png' height='100%' width='100%'> </div> <a href='#'>Produtos</a>
+                        <div class='icon'> <img src='../../images/prod.png' height='100%' width='100%'> </div>
+                        <form action='#' method='post'> 
+                            <input type='submit' value='Produtos' class='links'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>";
             
 
             if ($tipo == "administrador") {
                 echo "
                     <div class='aba'>
-                        <div class='icon'> </div> <a href='../produtos/produtos.php?user=$username' class='adm'>Gerenciar Produtos</a>
+                        <div class='icon'> </div>
+                        <form action='../produtos/produtos.php' method='post'> 
+                            <input type='submit' value='Gerenciar Produtos' class='adm'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>
                     <div class='aba'>
-                        <div class='icon'> </div> <a href='../usuarios/usuarios.php?user=$username' class='adm'>Gerenciar Usuarios</a>
+                        <div class='icon'> </div>
+                        <form action='../usuarios/usuarios.php' method='post'> 
+                            <input type='submit' value='Gerenciar Usuarios' class='adm'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>
                     <div class='aba'>       
-                        <div class='icon'> </div> <a href='../pedidos/pedidos.php?user=$username' class='adm'>Gerenciar Pedidos</a>
+                        <div class='icon'> </div>
+                        <form action='../pedidos/pedidos.php' method='post'> 
+                            <input type='submit' value='Gerenciar Pedidos' class='adm'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>
                     <div class='aba'>
-                        <div class='icon'> </div> <a href='#' class='adm'>Gerar Relatorios</a>
+                        <div class='icon'> </div>
+                        <form action='#' method='post'> 
+                            <input type='submit' value='Gerar Relatorios' class='adm'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>
                 ";
             }
             else if ($tipo == "cliente") {
                 echo "
                     <div class='aba'>
-                        <div class='icon'> </div> <a href='../fazer_pedido/fazer_pedido.php?user=$username'>Fazer Pedido</a>
+                        <div class='icon'> </div>
+                        <form action='../fazer_pedido/fazer_pedido.php' method='post'> 
+                            <input type='submit' value='Fazer Pedido' class='links'> 
+                            <input type='hidden' name='user' value='{$username}'> 
+                        </form>
                     </div>";
             }
             

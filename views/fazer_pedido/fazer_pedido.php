@@ -7,45 +7,61 @@
     <link rel="stylesheet" href="fazer_pedido.css">
 </head>
 <body>
-    <script>
-        let produtos = [];
-        function adicionarProduto(){
-            let produto = document.querySelector("select[name='produto']").value;
-            let quantProduto = document.querySelector("input[name='quantProduto']").value;
+        <?php
 
-            if (produto == "nulo" || quantProduto <= 0){
-                alert("Selecione um produto e uma quantidade válida");
-                return;
-            }
+        require_once(__DIR__ . "/../../model/funcoes.php");
 
-            let prod = {
-                produto: produto,
-                quantidade: quantProduto
-            };
 
-            produtos.push(prod);
-            console.log(produtos);
-            alert("Produto adicionado ao pedido");
+        $carrinho = [];
 
-            return produtos
+        if(isset($_POST["carrinho"])){
+            $carrinho = json_decode($_POST["carrinho"], true);
         }
-    </script>
+
+        if(isset($_POST["produto"]) && isset($_POST["quantProduto"])) {
+            $carrinho[] = [
+                "quantidade" => $_POST["quantProduto"],
+                "produto" => $_POST["produto"]
+            ];
+        }
+
+        ?>
     <form action="fazer_pedido.php" method="post">
         <h1>Fazer pedido</h1>
         <select name="produto" id="">
             <option value="nulo"> Selecione um produto </option>
             <?php
-    
-            require_once(__DIR__ . "/../../model/funcoes.php");
-    
+        
             $produto = readProdutos();
             foreach ($produto as $prod) {
                 echo "<option value='{$prod['TB_PRODUTO_ID']}'> {$prod['TB_PRODUTO_NOME']} </option>";
             }
             ?>
         </select>
-        <input type="number" name="quantProduto" placeholder="Quantidade">
-        <button onclick="adicionarProduto()">Adicionar</button>
+        <input type="number" name="quantProduto" placeholder="Quantidade" min=1 value="1">
+        <input type="hidden" name="adicionar">
+        <input type="submit" value="ADICIONAR AO CARRINHO">
+        <?php
+        $carrinhoStr = json_encode($carrinho);
+
+        echo "<input type='hidden' name='carrinho' value='{$carrinhoStr}'>"
+
+        ?>
     </form>
+    <h3> Carrinho </h3>
+    <table border="1" cellspacing="0" cellpadding="15">
+
+    <?php
+    foreach($carrinho as $car){
+        $produto = getProduto($car["produto"]);
+        echo "
+                <tr>
+                    <td>{$produto["TB_PRODUTO_NOME"]}</td>
+                    <td>{$car["quantidade"]}</td>
+                </tr>
+        ";
+    }
+    ?>
+    </table>
 </body>
 </html>

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require("model/funcoes.php");
 
 function home(){
@@ -7,12 +9,19 @@ function home(){
 }
 
 function criarProd(){
-    criarProdutos($_POST["nomeProduto"], $_POST["descProduto"], $_POST["precoProduto"], $_POST["categoria"]);
+    $nomeProduto = $_POST["nomeProduto"];
+    $descProduto = $_POST["descProduto"];
+    $precoProduto = $_POST["precoProduto"];
+    $categoriaProduto = $_POST["categoria"];
+
+    criarProdutos($nomeProduto, $descProduto, $precoProduto, $categoriaProduto);
     header("Location: ./views/produtos/produtos.php");
 }
 
 function deleteProd(){
-    deleteProduto($_POST["produto"]);
+    $produtoID = $_POST["produto"];
+
+    deleteProduto($produtoID);
     header("Location: ./views/produtos/produtos.php");
 }
 
@@ -22,25 +31,35 @@ function editProd(){
 }
 
 function criarCat(){
-    criarCategoria($_POST["nomeCategoria"]);
+    $nomeCategoria = $_POST["nomeCategoria"];
+    criarCategoria($nomeCategoria);
     header("Location: ./views/produtos/produtos.php");
 }
 
 function deleteCat(){
-    deleteCategoria($_POST["categoria"]);
+    $categoriaID = $_POST["categoria"];
+    deleteCategoria($categoriaID);
     header("Location: ./views/produtos/produtos.php");
 }
 
 function editCat(){
-    editarCategoria($_POST["nomeCategoria"], $_POST["categoria"]);
+    $nomeCategoria = $_POST["nomeCategoria"];
+    $categoriaID = $_POST["categoria"];
+    editarCategoria($nomeCategoria, $categoriaID);
     header("Location: ./views/produtos/produtos.php");
 }
 
 
 function logarUsuario(){
     $user = loginUser($_POST["user"], $_POST["senha"]);
+    $username = $_POST["user"];
+
     if ($user){
-        header("Location: ./views/home/inicio.php?user={$_POST['user']}");
+        echo "<form action='./views/home/inicio.php' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$username}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
+        
     } else {
         echo "<script>alert('Usuario ou senhas incorretos'); window.location.href='./views/login/login.php'</script>";;
     }
@@ -56,13 +75,18 @@ function concluirCadastroUser(){
 }
 
 function deletarUser(){
-    deleteUser($_POST["usuarios"]);
+    $userID = $_POST["usuarios"];
+
+    deleteUser($userID);
     header("Location: ./views/usuarios/usuarios.php");
 }
 
-function adicionarProdutoPedido(){
-    addProdutoPedido($_POST["produto"], $_POST["quantidade"], $_POST["usuario"]);
-    header("Location: ./views/fazer_pedido/fazer_pedido.php?user={$_POST['user']}");
+function adicionarCarrinho(){
+    $produtoID = $_POST["produto"];
+    $quantidadeProduto = $_POST["quantProduto"];
+
+    addCarrinho($produtoID, $quantidadeProduto);
+    header("Location: ./views/fazer_pedido/fazer_pedido.php");
 }
 
 ?>

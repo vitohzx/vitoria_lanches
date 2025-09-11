@@ -46,17 +46,26 @@ function getUsers(){
 }
 
 function loginUser($name, $senha){
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
     $sql = "SELECT * FROM tb_usuarios WHERE TB_USUARIOS_USERNAME = ? AND TB_USUARIOS_PASSWORD = ?";
     $conexao = conectarBanco();
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("ss", $name, $senha);
     $stmt->execute();
     $result = $stmt->get_result();
+    $usuario = $result->fetch_assoc();
 
 
     if ($result->num_rows > 0) {
         $stmt->close();
         $conexao->close();
+        $_SESSION["user"] = $usuario["TB_USUARIOS_USERNAME"];
+        $_SESSION["id"] = $usuario["TB_USUARIOS_ID"];
+        $_SESSION["tipo"] = $usuario["TB_USUARIOS_TIPO"];
+
         return true;
     } 
     else {
@@ -67,6 +76,10 @@ function loginUser($name, $senha){
 }
 
 function cadastroUser($user, $senha, $confirm){
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
     if ($senha != $confirm) {
         echo "<script>alert('A confirmação da senha está incorreta'); window.location.href='./views/cadastrar/cadastrar.php'</script>";
         return;
@@ -77,6 +90,13 @@ function cadastroUser($user, $senha, $confirm){
         $stmt = $conexao->prepare($sql);
         $stmt->bind_param("ss", $user, $senha);
         $stmt->execute();
+
+        $usuario = getUser($user);
+
+        $_SESSION["user"] = $usuario["TB_USUARIOS_USERNAME"];
+        $_SESSION["id"] = $usuario["TB_USUARIOS_ID"];
+        $_SESSION["tipo"] = $usuario["TB_USUARIOS_TIPO"];
+        
     } 
     catch(Exception $e) {
         echo "<script>alert('Já existe um usuario com esse username'); window.location.href='./views/cadastrar/cadastrar.php'</script>";
@@ -109,6 +129,17 @@ function concluirCadastro($nome, $tel, $endereco, $numEndereco, $user){
 
 
 // produtos
+
+function getProduto($id){
+    $sql = "SELECT * FROM tb_produto WHERE TB_PRODUTO_ID = ?";
+    $conexao = conectarBanco();
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $result = $result->fetch_assoc();
+    return $result;
+}
 
 function readProdutos(){
     $sql = "SELECT * FROM tb_produto";       
@@ -236,19 +267,20 @@ function getPedidos(){
     return $pedidos;
 }
 
-// function addProdutoPedido($produto, $quantidade, $user){
-//     if ($produto == "nulo") {
-//         return;
-//     }
+function addCarrinho($id, $quant){
+    if (session_status() == PHP_SESSION_NONE){
+        session_start();
+    }
 
-//     $sql = "INSERT INTO tb_pedido_venda (TB_CLIENTE_ID, TB_PEDIDO_VENDA_DATA, TB_PEDIDO_VENDA_VAL_TOTAL, TB_PEDIDO_VENDA_STATUS, TB_PEDIDO_VENDA_FORMA_PAG, TB_PEDIDO_VENDA_OBS) VALUES (?, '01/01/2001', ?, 'PREPARANDO', 'DINHEIRO', 'SEM OBS')";
-//     $conexao = conectarBanco();
-//     $stmt = $conexao->prepare($sql);
-//     $stmt->bind_param("ii", $, $qauntidade);
-//     $stmt->execute();
-//     $stmt->close();
-//     $conexao->close();
-// }
+    if (!isset($_SESSION["carrinho"])){
+        $_SESSION["carrinho"] = [];
+    }
+
+    $_SESSION["carrinho"][] = [
+        "idProduto" => $id,
+        "quantidadeProduto" => $quant
+    ];
+}
 
 
 ?>
