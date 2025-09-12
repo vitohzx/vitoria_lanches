@@ -44,8 +44,8 @@
         <?php
         $carrinhoStr = json_encode($carrinho);
 
-        echo "<input type='hidden' name='carrinho' value='{$carrinhoStr}'>"
-
+        echo "<input type='hidden' name='carrinho' value='{$carrinhoStr}'>";
+        echo "<input type='hidden' name='user' value='{$_POST['user']}'>";
         ?>
     </form>
     <h3> Carrinho </h3>
@@ -62,6 +62,15 @@
         ";
     }
     ?>
-    </table>
+    </table><br>
+    <form action="../../index.php" method="post">
+        <input type="submit" value="CONCLUIR PEDIDO">
+
+        <?php
+        echo "<input type='hidden' name='carrinho' value='{$carrinhoStr}'>";
+        echo "<input type='hidden' name='user' value='{$_POST['user']}'>";
+        ?>
+        <input type="hidden" name="acao" value="fazerPedido">
+    </form>
 </body>
 </html>

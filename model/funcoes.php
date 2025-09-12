@@ -267,19 +267,37 @@ function getPedidos(){
     return $pedidos;
 }
 
-function addCarrinho($id, $quant){
-    if (session_status() == PHP_SESSION_NONE){
-        session_start();
+function pedido($carrinho, $user){
+
+    $usuario = getUser($user);
+    $usuarioId = $usuario['TB_USUARIOS_ID'];
+    $sql = "INSERT INTO TB_PEDIDO_VENDA (TB_CLIENTE_ID, TB_PEDIDO_VENDA_DATA, TB_PEDIDO_VENDA_VAL_TOTAL, TB_PEDIDO_VENDA_STATUS, TB_PEDIDO_VENDA_FORMA_PAG, TB_PEDIDO_VENDA_OBS) 
+            VALUES ($usuarioId, NOW(), 0, 'Em andamento', 'Não definido', '');";
+    $conexao = conectarBanco();
+
+    $conexao->query($sql);
+    $pedidoId = $conexao->insert_id;
+
+    $precoFinal = 0;
+
+    foreach($carrinho as $ped){
+
+        $produto = getProduto($ped['produto']);
+
+        $precoTotal = $produto['TB_PRODUTO_PRECO_UNIT'] * $ped['quantidade'];
+        $precoFinal += $precoTotal;
+        
+        $sqlPedido = "INSERT INTO tb_pedido (TB_PRODUTO_ID, TB_PEDIDO_VENDA_ID, TB_PEDIDO_PRODUTO_QTD, TB_PEDIDO_PRODUTO_PRECO_UNIT, TB_PEDIDO_PRODUTO_PRECO_TOTAL) 
+                      VALUES ({$ped['produto']}, $pedidoId ,{$ped['quantidade']}, {$produto['TB_PRODUTO_PRECO_UNIT']}, {$precoTotal});";
+
+        $conexao->query($sqlPedido);
     }
 
-    if (!isset($_SESSION["carrinho"])){
-        $_SESSION["carrinho"] = [];
-    }
+    $sqlFinalizar = "UPDATE TB_PEDIDO_VENDA SET TB_PEDIDO_VENDA_VAL_TOTAL = {$precoFinal} WHERE TB_PEDIDO_VENDA_ID = $pedidoId;";
 
-    $_SESSION["carrinho"][] = [
-        "idProduto" => $id,
-        "quantidadeProduto" => $quant
-    ];
+    $conexao->query($sqlFinalizar);
+
+    $conexao->close();
 }
 
 

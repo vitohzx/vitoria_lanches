@@ -66,8 +66,8 @@ switch($acao){
 
     //pedidos
 
-    case "adicionar": {
-        adicionarCarrinho();
+    case "fazerPedido": {
+        fazerPedido();
         break;
     }
 

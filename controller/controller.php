@@ -81,12 +81,18 @@ function deletarUser(){
     header("Location: ./views/usuarios/usuarios.php");
 }
 
-function adicionarCarrinho(){
-    $produtoID = $_POST["produto"];
-    $quantidadeProduto = $_POST["quantProduto"];
+//pedido
 
-    addCarrinho($produtoID, $quantidadeProduto);
-    header("Location: ./views/fazer_pedido/fazer_pedido.php");
+function fazerPedido(){
+    $carrinho = json_decode($_POST["carrinho"], true);
+    $user = $_POST["user"];
+
+    pedido($carrinho, $user);
+    echo "<form action='./views/fazer_pedido/fazer_pedido.php' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$username}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
+
 }
 
 ?>
