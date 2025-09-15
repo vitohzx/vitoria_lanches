@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos</title>
-    <link rel="stylesheet" href="../../.css/produtos.css">
+    <link rel="stylesheet" href="../../styles/produtos.css">
 </head>
 
 <body>
@@ -47,6 +47,10 @@
             <input type="hidden" name="user" value="<?php echo $_POST["user"] ?>">
             <input type="hidden" name="acao" value="criar">
         </div>
+    </form>
+
+    <form action="../../index.php" method="post">
+        <input type="text">
     </form>
 
 
