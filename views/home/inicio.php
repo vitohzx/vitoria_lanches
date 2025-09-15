@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="../../.css/home.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 </head>
 
 <body>
@@ -13,17 +17,26 @@
         <div class="menu">
             <?php
 
-            session_start();
-
             require_once(__DIR__. "/../../model/funcoes.php");
         
             $tipo = "visitante";
             $username = "visitante";
+            $nome = "visitante";
 
             if(isset($_POST["user"])) {
                 $usuario = getUser($_POST["user"]);
-                $tipo = $usuario["TB_USUARIOS_TIPO"];
-                $username = $usuario["TB_USUARIOS_USERNAME"];
+                if($usuario){
+                    $tipo = $usuario["TB_USUARIOS_TIPO"];
+                    $username = $usuario["TB_USUARIOS_USERNAME"];
+                }
+                
+                if($usuario["TB_USUARIOS_TIPO"] == "cliente"){  
+                    $cliente = getCliente($usuario["TB_USUARIOS_ID"]);
+                    $nome = $cliente["TB_CLIENTE_NOME"];
+                }
+                else {
+                    $nome = "Administrador";
+                }
             }
             
 
@@ -47,21 +60,21 @@
                 echo "
                     <div class='aba'>
                         <div class='icon'> </div>
-                        <form action='../produtos/produtos.php' method='post'> 
+                        <form action='inicio.php?pagina=gerenciar_produtos' method='post'> 
                             <input type='submit' value='Gerenciar Produtos' class='adm'> 
                             <input type='hidden' name='user' value='{$username}'> 
                         </form>
                     </div>
                     <div class='aba'>
                         <div class='icon'> </div>
-                        <form action='../usuarios/usuarios.php' method='post'> 
+                        <form action='inicio.php?pagina=usuarios' method='post'> 
                             <input type='submit' value='Gerenciar Usuarios' class='adm'> 
                             <input type='hidden' name='user' value='{$username}'> 
                         </form>
                     </div>
                     <div class='aba'>       
                         <div class='icon'> </div>
-                        <form action='../pedidos/pedidos.php' method='post'> 
+                        <form action='inicio.php?pagina=gerenciar_pedidos' method='post'> 
                             <input type='submit' value='Gerenciar Pedidos' class='adm'> 
                             <input type='hidden' name='user' value='{$username}'> 
                         </form>
@@ -79,7 +92,7 @@
                 echo "
                     <div class='aba'>
                         <div class='icon'> </div>
-                        <form action='../fazer_pedido/fazer_pedido.php' method='post'> 
+                        <form action='inicio.php?pagina=fazer_pedido' method='post'> 
                             <input type='submit' value='Fazer Pedido' class='links'> 
                             <input type='hidden' name='user' value='{$username}'> 
                         </form>
@@ -88,6 +101,8 @@
             
             ?>
         </div>
+
+
         <div class="main">
             <div class="header">
                 <div class="titulo">
@@ -97,6 +112,47 @@
                     <a href="../login/login.php"> <img src="../../images/user.png" alt="" height="100%" width="100%"> </a>
                 </div>
             </div>
+            <?php
+            if(isset($_GET["pagina"])){
+                $pag = $_GET["pagina"];
+                switch($pag) {
+                    case "gerenciar_produtos": 
+                        if($tipo != "administrador"){
+                            echo "Você não tem permissão para acessar essa pagina";
+                            break;
+                        }
+                        include_once "../produtos/produtos.php";
+                        break;
+                    
+                    case "usuarios":
+                        if($tipo != "administrador"){
+                            echo "Você não tem permissão para acessar essa pagina";
+                            break;
+                        }
+                        include_once "../usuarios/usuarios.php";
+                        break;
+                    
+                    case "gerenciar_pedidos":
+                        if($tipo != "administrador"){
+                            echo "Você não tem permissão para acessar essa pagina";
+                            break;
+                        }
+                        include_once "../pedidos/pedidos.php";
+                        break;
+                    
+                    case "fazer_pedido": 
+                        include_once "../fazer_pedido/fazer_pedido.php";
+                        break;
+
+                    default: 
+                        echo "erro 404: pagina inexistente";
+                }
+            }
+            else {
+                echo "<div style='margin-top: 5%; font-size: 200%'> Bem vindo ao vitoria lanches <b> {$nome} </b> </div>";
+            }
+            ?>
+
         </div>
     </div>
 </body>

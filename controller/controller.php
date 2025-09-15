@@ -15,38 +15,61 @@ function criarProd(){
     $categoriaProduto = $_POST["categoria"];
 
     criarProdutos($nomeProduto, $descProduto, $precoProduto, $categoriaProduto);
-    header("Location: ./views/produtos/produtos.php");
+    
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_produtos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 function deleteProd(){
     $produtoID = $_POST["produto"];
 
     deleteProduto($produtoID);
-    header("Location: ./views/produtos/produtos.php");
+    
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_produtos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 function editProd(){
     editarProduto($_POST["nomeProduto"], $_POST["descProduto"], $_POST["precoProduto"], $_POST["produto"]);
-    header("Location: ./views/produtos/produtos.php");
+    
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_produtos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 function criarCat(){
     $nomeCategoria = $_POST["nomeCategoria"];
     criarCategoria($nomeCategoria);
-    header("Location: ./views/produtos/produtos.php");
+    
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_produtos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 function deleteCat(){
     $categoriaID = $_POST["categoria"];
     deleteCategoria($categoriaID);
-    header("Location: ./views/produtos/produtos.php");
+
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_produtos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 function editCat(){
     $nomeCategoria = $_POST["nomeCategoria"];
     $categoriaID = $_POST["categoria"];
     editarCategoria($nomeCategoria, $categoriaID);
-    header("Location: ./views/produtos/produtos.php");
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_produtos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 
@@ -71,14 +94,21 @@ function cadastro(){
 
 function concluirCadastroUser(){
     concluirCadastro($_POST["nome"], $_POST["tel"], $_POST["endereco"], $_POST["numEndereco"], $_GET["user"]);
-    header("Location: ./views/home/inicio.php?user={$_GET['user']}");
+    
+    echo "<form action='./views/home/inicio.php' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_GET["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 function deletarUser(){
     $userID = $_POST["usuarios"];
-
     deleteUser($userID);
-    header("Location: ./views/usuarios/usuarios.php");
+
+    echo "<form action='./views/home/inicio.php?pagina=usuarios' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 //pedido
@@ -88,8 +118,8 @@ function fazerPedido(){
     $user = $_POST["user"];
 
     pedido($carrinho, $user);
-    echo "<form action='./views/fazer_pedido/fazer_pedido.php' method='post' id='formUser'>
-            <input type='hidden' name='user' value='{$username}'>
+    echo "<form action='./views/home/inicio.php?pagina=fazer_pedido' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$user}'>
         </form>
         <script> document.getElementById('formUser').submit() </script>";
 

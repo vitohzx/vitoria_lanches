@@ -34,6 +34,7 @@
         <br>
         <input type="submit" value="EXCLUIR USUARIOS">
         <input type="hidden" name="acao" value="deleteUser">
+        <input type="hidden" name="user" value="<?php echo $_POST["user"] ?>">
     </form>
 
 </body>

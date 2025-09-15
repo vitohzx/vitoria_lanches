@@ -5,72 +5,71 @@ require("controller/controller.php");
 $acao = isset($_POST["acao"]) ? $_POST["acao"] : "home";
 
 switch($acao){
-    case "home": {
+    case "home": 
         home();
         break;
-    }
+        
 
-    case "logar": {
+    case "logar": 
         logarUsuario();
         break;
-    }
 
-    case "cadastrar": {
+
+    case "cadastrar": 
         cadastro();
         break;
-    }
+    
 
-    case "concluir": {
+    case "concluir": 
         concluirCadastroUser();
         break;
-    }
+    
 
-    case "inicio": {
+    case "inicio": 
         home();
         break;
-    }
+    
 
-    case "criarCategoria": {
+    case "criarCategoria": 
         criarCat();
         break;
-    }
-    case "deleteCategoria": {
+    
+    case "deleteCategoria": 
         deleteCat();
         break;
-    }
+    
 
-    case "editCategoria": {
+    case "editCategoria": 
         editCat();
         break;
-    }
+    
 
-    case "criar": {
+    case "criar": 
         criarProd();
         break;
-    }
+    
 
-    case "deleteProduto": {
+    case "deleteProduto": 
         deleteProd();
         break;
-    }
+    
 
-    case "editProduto": {
+    case "editProduto": 
         editProd();
         break;
-    }
+    
 
-    case "deleteUser": {
+    case "deleteUser": 
         deletarUser();
         break;
-    }
+    
 
     //pedidos
 
-    case "fazerPedido": {
+    case "fazerPedido": 
         fazerPedido();
         break;
-    }
+} 
 
-}
 
 ?>

@@ -267,12 +267,27 @@ function getPedidos(){
     return $pedidos;
 }
 
-function pedido($carrinho, $user){
+function getCliente($id){
+    $sql = "SELECT * FROM tb_cliente WHERE TB_USER_FK = {$id}";       
+    $conexao = conectarBanco();   
+    $result = $conexao->query($sql);
+    $result = $result->fetch_assoc();
+    $conexao->close();
 
+    return $result;
+}
+
+function pedido($carrinho, $user){
     $usuario = getUser($user);
-    $usuarioId = $usuario['TB_USUARIOS_ID'];
+    $idUser = $usuario["TB_USUARIOS_ID"];
+
+    $cliente = getCliente($idUser);
+    $clienteId = $cliente['TB_CLIENTE_ID'];
+
+
+
     $sql = "INSERT INTO TB_PEDIDO_VENDA (TB_CLIENTE_ID, TB_PEDIDO_VENDA_DATA, TB_PEDIDO_VENDA_VAL_TOTAL, TB_PEDIDO_VENDA_STATUS, TB_PEDIDO_VENDA_FORMA_PAG, TB_PEDIDO_VENDA_OBS) 
-            VALUES ($usuarioId, NOW(), 0, 'Em andamento', 'Não definido', '');";
+            VALUES ($clienteId, NOW(), 0, 'pendente', 'Não definido', '');";
     $conexao = conectarBanco();
 
     $conexao->query($sql);
