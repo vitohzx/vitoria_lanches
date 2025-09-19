@@ -22,12 +22,14 @@
             $tipo = "visitante";
             $username = "visitante";
             $nome = "visitante";
+            $foto = "../../images/user.png";
 
             if(isset($_POST["user"])) {
                 $usuario = getUser($_POST["user"]);
                 if($usuario){
                     $tipo = $usuario["TB_USUARIOS_TIPO"];
                     $username = $usuario["TB_USUARIOS_USERNAME"];
+                    $foto = "../../images/conta.png";
                 }
                 
                 if($usuario["TB_USUARIOS_TIPO"] == "cliente"){  
@@ -109,7 +111,7 @@
                     <span class="text"> vitoria lanches </span>
                 </div>
                 <div class="conta">
-                    <a href="../login/login.php"> <img src="../../images/user.png" alt="" height="100%" width="100%"> </a>
+                    <a href="../login/login.php"> <img src="<?=$foto?>" alt="" height="100%" width="100%"> </a>
                 </div>
             </div>
             <?php
