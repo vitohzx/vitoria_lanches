@@ -122,7 +122,17 @@ function fazerPedido(){
             <input type='hidden' name='user' value='{$user}'>
         </form>
         <script> document.getElementById('formUser').submit() </script>";
+}
 
+
+function concluirPedido(){
+    $pedidosID = $_POST["pedidos"];
+    concluirPdd($pedidosID);
+
+    echo "<form action='./views/home/inicio.php?pagina=gerenciar_pedidos' method='post' id='formUser'>
+            <input type='hidden' name='user' value='{$_POST["user"]}'>
+        </form>
+        <script> document.getElementById('formUser').submit() </script>";
 }
 
 ?>

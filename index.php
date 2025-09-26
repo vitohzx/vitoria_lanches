@@ -69,6 +69,10 @@ switch($acao){
     case "fazerPedido": 
         fazerPedido();
         break;
+
+    case "concluirPedido":
+        concluirPedido();
+        break;
 } 
 
 

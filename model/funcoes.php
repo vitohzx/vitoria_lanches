@@ -238,15 +238,22 @@ function editarCategoria($nome, $id){
 // usuarios 
 
 function deleteUser($users){
+    $sqlDeleteCliente = "DELETE FROM tb_cliente WHERE TB_USER_FK = ?";
     $sql = "DELETE FROM tb_usuarios WHERE TB_USUARIOS_ID = ?";
     $conexao = conectarBanco();
+
+    $stmtCliente = $conexao->prepare($sqlDeleteCliente);
     $stmt = $conexao->prepare($sql);
 
     foreach ($users as $id) {
+        $stmtCliente->bind_param("i", $id);
+        $stmtCliente->execute();
+
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
 
+    $stmtCliente->close();
     $stmt->close();
     $conexao->close();
 }
@@ -254,7 +261,7 @@ function deleteUser($users){
 //pedidos
 
 function getPedidos(){
-    $sql = "SELECT * FROM tb_pedido INNER JOIN tb_pedido_venda";       
+    $sql = "SELECT * FROM tb_pedido INNER JOIN tb_pedido_venda ON tb_pedido.TB_PEDIDO_VENDA_ID = tb_pedido_venda.TB_PEDIDO_VENDA_ID;";       
     $conexao = conectarBanco();   
     $result = $conexao->query($sql);
     $pedidos = [];
@@ -267,8 +274,23 @@ function getPedidos(){
     return $pedidos;
 }
 
+
+
+
+
+
 function getCliente($id){
     $sql = "SELECT * FROM tb_cliente WHERE TB_USER_FK = {$id}";       
+    $conexao = conectarBanco();   
+    $result = $conexao->query($sql);
+    $result = $result->fetch_assoc();
+    $conexao->close();
+
+    return $result;
+}
+
+function getClientePorId($id){
+    $sql = "SELECT * FROM tb_cliente WHERE TB_CLIENTE_ID = {$id}";       
     $conexao = conectarBanco();   
     $result = $conexao->query($sql);
     $result = $result->fetch_assoc();
@@ -283,7 +305,6 @@ function pedido($carrinho, $user){
 
     $cliente = getCliente($idUser);
     $clienteId = $cliente['TB_CLIENTE_ID'];
-
 
 
     $sql = "INSERT INTO TB_PEDIDO_VENDA (TB_CLIENTE_ID, TB_PEDIDO_VENDA_DATA, TB_PEDIDO_VENDA_VAL_TOTAL, TB_PEDIDO_VENDA_STATUS, TB_PEDIDO_VENDA_FORMA_PAG, TB_PEDIDO_VENDA_OBS) 
@@ -312,6 +333,56 @@ function pedido($carrinho, $user){
 
     $conexao->query($sqlFinalizar);
 
+    $conexao->close();
+}
+
+
+
+function getPedidoFormat(){
+    $pedidos = getPedidos();
+    $pdd = [];
+    
+    foreach($pedidos as $pedido){
+        $produtoNome = getProduto($pedido["TB_PRODUTO_ID"]);
+        $cliente = getClientePorId($pedido["TB_CLIENTE_ID"]);
+
+        if(isset($pdd[$pedido["TB_PEDIDO_VENDA_ID"]])){
+            $pdd[$pedido["TB_PEDIDO_VENDA_ID"]]["quantidade"] += $pedido["TB_PEDIDO_PRODUTO_QTD"];
+            $pdd[$pedido["TB_PEDIDO_VENDA_ID"]]["produto"] .= ", " . $produtoNome["TB_PRODUTO_NOME"];
+            continue;
+        }
+
+
+        $pdd[$pedido["TB_PEDIDO_VENDA_ID"]] = [
+            "id" => $pedido["TB_PEDIDO_ID"],
+            "idVenda" => $pedido["TB_PEDIDO_VENDA_ID"],
+            "cliente" => $cliente["TB_CLIENTE_NOME"],
+            "produto" => $produtoNome["TB_PRODUTO_NOME"],
+            "quantidade" => $pedido["TB_PEDIDO_PRODUTO_QTD"],
+            "forma_pag" => $pedido["TB_PEDIDO_VENDA_FORMA_PAG"],
+            "status" => $pedido["TB_PEDIDO_VENDA_STATUS"],
+            "obs" => $pedido["TB_PEDIDO_VENDA_OBS"],
+            "data" => $pedido["TB_PEDIDO_VENDA_DATA"]
+        ];
+
+    }
+    return $pdd;
+}
+
+
+
+
+function concluirPdd($pedidosID){
+    $conexao = conectarBanco();
+    $sql = "UPDATE TB_PEDIDO_VENDA SET TB_PEDIDO_VENDA_STATUS = 'concluido' WHERE TB_PEDIDO_VENDA_ID = ?;";
+    $stmt = $conexao->prepare($sql);
+
+    foreach($pedidosID as $id){
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+
+    $stmt->close();
     $conexao->close();
 }
 
