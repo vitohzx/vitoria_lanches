@@ -1,5 +1,7 @@
 <?php
 
+// conexão com o banco
+
 function conectarBanco() {
     $host = "127.0.0.1";
     $user = "root";
@@ -19,6 +21,8 @@ function conectarBanco() {
 
     return $conexao;
 }
+
+// usuarios
 
 function getUser($user){
     $sql = "SELECT * FROM tb_usuarios WHERE TB_USUARIOS_USERNAME = ?";
@@ -45,10 +49,30 @@ function getUsers(){
     return $users;
 }
 
-function loginUser($name, $senha){
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+function deleteUser($users){
+    $sqlDeleteCliente = "DELETE FROM tb_cliente WHERE TB_USER_FK = ?";
+    $sql = "DELETE FROM tb_usuarios WHERE TB_USUARIOS_ID = ?";
+    $conexao = conectarBanco();
+
+    $stmtCliente = $conexao->prepare($sqlDeleteCliente);
+    $stmt = $conexao->prepare($sql);
+
+    foreach ($users as $id) {
+        $stmtCliente->bind_param("i", $id);
+        $stmtCliente->execute();
+
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
     }
+
+    $stmtCliente->close();
+    $stmt->close();
+    $conexao->close();
+}
+
+// login e cadastro
+
+function loginUser($name, $senha){
 
     $sql = "SELECT * FROM tb_usuarios WHERE TB_USUARIOS_USERNAME = ? AND TB_USUARIOS_PASSWORD = ?";
     $conexao = conectarBanco();
@@ -62,10 +86,6 @@ function loginUser($name, $senha){
     if ($result->num_rows > 0) {
         $stmt->close();
         $conexao->close();
-        $_SESSION["user"] = $usuario["TB_USUARIOS_USERNAME"];
-        $_SESSION["id"] = $usuario["TB_USUARIOS_ID"];
-        $_SESSION["tipo"] = $usuario["TB_USUARIOS_TIPO"];
-
         return true;
     } 
     else {
@@ -76,10 +96,6 @@ function loginUser($name, $senha){
 }
 
 function cadastroUser($user, $senha, $confirm){
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-
     if ($senha != $confirm) {
         echo "<script>alert('A confirmação da senha está incorreta'); window.location.href='./views/cadastrar/cadastrar.php'</script>";
         return;
@@ -91,12 +107,7 @@ function cadastroUser($user, $senha, $confirm){
         $stmt->bind_param("ss", $user, $senha);
         $stmt->execute();
 
-        $usuario = getUser($user);
-
-        $_SESSION["user"] = $usuario["TB_USUARIOS_USERNAME"];
-        $_SESSION["id"] = $usuario["TB_USUARIOS_ID"];
-        $_SESSION["tipo"] = $usuario["TB_USUARIOS_TIPO"];
-        
+        $usuario = getUser($user);        
     } 
     catch(Exception $e) {
         echo "<script>alert('Já existe um usuario com esse username'); window.location.href='./views/cadastrar/cadastrar.php'</script>";
@@ -189,6 +200,7 @@ function editarProduto($nome, $desc, $preco, $id){
     $conexao->close();
 }
 
+
 // categorias
 
 function readCategorias(){
@@ -235,28 +247,7 @@ function editarCategoria($nome, $id){
     $conexao->close();
 }
 
-// usuarios 
 
-function deleteUser($users){
-    $sqlDeleteCliente = "DELETE FROM tb_cliente WHERE TB_USER_FK = ?";
-    $sql = "DELETE FROM tb_usuarios WHERE TB_USUARIOS_ID = ?";
-    $conexao = conectarBanco();
-
-    $stmtCliente = $conexao->prepare($sqlDeleteCliente);
-    $stmt = $conexao->prepare($sql);
-
-    foreach ($users as $id) {
-        $stmtCliente->bind_param("i", $id);
-        $stmtCliente->execute();
-
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-    }
-
-    $stmtCliente->close();
-    $stmt->close();
-    $conexao->close();
-}
 
 //pedidos
 
@@ -276,28 +267,6 @@ function getPedidos(){
 
 
 
-
-
-
-function getCliente($id){
-    $sql = "SELECT * FROM tb_cliente WHERE TB_USER_FK = {$id}";       
-    $conexao = conectarBanco();   
-    $result = $conexao->query($sql);
-    $result = $result->fetch_assoc();
-    $conexao->close();
-
-    return $result;
-}
-
-function getClientePorId($id){
-    $sql = "SELECT * FROM tb_cliente WHERE TB_CLIENTE_ID = {$id}";       
-    $conexao = conectarBanco();   
-    $result = $conexao->query($sql);
-    $result = $result->fetch_assoc();
-    $conexao->close();
-
-    return $result;
-}
 
 function pedido($carrinho, $user){
     $usuario = getUser($user);
@@ -384,6 +353,28 @@ function concluirPdd($pedidosID){
 
     $stmt->close();
     $conexao->close();
+}
+
+// clientes
+
+function getCliente($id){
+    $sql = "SELECT * FROM tb_cliente WHERE TB_USER_FK = {$id}";       
+    $conexao = conectarBanco();   
+    $result = $conexao->query($sql);
+    $result = $result->fetch_assoc();
+    $conexao->close();
+
+    return $result;
+}
+
+function getClientePorId($id){
+    $sql = "SELECT * FROM tb_cliente WHERE TB_CLIENTE_ID = {$id}";       
+    $conexao = conectarBanco();   
+    $result = $conexao->query($sql);
+    $result = $result->fetch_assoc();
+    $conexao->close();
+
+    return $result;
 }
 
 

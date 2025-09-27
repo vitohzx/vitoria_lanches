@@ -24,7 +24,7 @@
             $nome = "visitante";
             $foto = "../../images/user.png";
 
-            if(isset($_POST["user"])) {
+            if(isset($_POST["user"]) && $_POST["user"] != "visitante") {
                 $usuario = getUser($_POST["user"]);
                 if($usuario){
                     $tipo = $usuario["TB_USUARIOS_TIPO"];
